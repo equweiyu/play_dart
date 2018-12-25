@@ -25,8 +25,4 @@ class LastContent extends Decodable {
   Story top_storie;
 
   LastContent.decode(data) : super.decode(data);
-} 
-
-class A extends Decodable {
-  A.decode(data) : super.decode(data);
 }

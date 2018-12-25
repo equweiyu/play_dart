@@ -10,9 +10,10 @@ abstract class Decodable {
         final keySymbol = f.simpleName;
         final key = MirrorSystem.getName(keySymbol);
         var value = data[key];
-        final typeName = MirrorSystem.getName(f.type.simpleName);
+        final type = (f.type.reflectedType);
+        final typeClass = reflectClass(type);
 
-        if (typeName == 'List') {
+        if (typeClass.isSubclassOf(reflectClass(List))) {
           final _ = f.type.reflectedType.toString();
           final itemTypeName = _.substring(5, _.length - 1);
           final itemClass = findClassMirror(itemTypeName);
@@ -26,11 +27,9 @@ abstract class Decodable {
             mirror.setField(keySymbol, value);
           }
         } else {
-
-          final type = (f.type.reflectedType);
-          final typeClass = reflectClass(type);
           if (typeClass.isSubtypeOf(reflectClass(Decodable))) {
-            mirror.setField(keySymbol, typeClass.newInstance(#decode, [value]).reflectee);
+            mirror.setField(
+                keySymbol, typeClass.newInstance(#decode, [value]).reflectee);
           } else {
             mirror.setField(keySymbol, value);
           }
